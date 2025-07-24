@@ -1,0 +1,412 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>URL Shortener</h1>
+        <div id="auth-links">
+            <a href="#" id="login-link">Login / Register</a>
+            <span id="user-info" class="hidden">
+                    Logged in as <strong id="username-display"></strong> | <a href="#" id="logout-link">Logout</a>
+                </span>
+        </div>
+    </header>
+
+
+    <div id="anonymous-section">
+        <h2>Shorten a Long URL</h2>
+        <form id="shorten-form">
+            <input type="url" id="long-url-input" placeholder="Enter a long URL to shorten" required>
+            <button type="submit">Shorten</button>
+        </form>
+    </div>
+
+    <div id="login-section" class="hidden">
+        <h2>Login or Register</h2>
+        <p>Enter a username and password. If the user doesn't exist, it will be created.</p>
+        <form id="login-form">
+            <input type="text" id="username-input" placeholder="Username" required>
+            <input type="password" id="password-input" placeholder="Password" required>
+            <button type="submit">Login / Register</button>
+        </form>
+    </div>
+
+
+    <div id="custom-url-section" class="hidden">
+        <h2>Create a Custom Short URL</h2>
+        <form id="custom-url-form">
+            <input type="url" id="custom-long-url-input" placeholder="Enter a long URL" required>
+            <input type="text" id="custom-code-input" placeholder="Enter desired custom name (e.g., my-link)" required>
+            <button type="submit">Create Custom Link</button>
+        </form>
+    </div>
+
+
+    <div id="result-section" class="hidden">
+        <h2>Your Shortened URL:</h2>
+        <div class="result-box">
+            <a href="" id="short-url-link" target="_blank"></a>
+            <button id="copy-button">Copy</button>
+        </div>
+    </div>
+
+   
+    <div id="message-area" class="hidden"></div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
+<
+<style>
+    :root {
+        --primary-color: #007bff;
+        --secondary-color: #6c757d;
+        --background-color: #f8f9fa;
+        --text-color: #333;
+        --container-bg: #ffffff;
+        --border-radius: 8px;
+        --box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--background-color);
+        color: var(--text-color);
+        margin: 0;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 600px;
+        background-color: var(--container-bg);
+        padding: 30px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 1.8em;
+        color: var(--primary-color);
+    }
+
+    #auth-links a, #logout-link {
+        color: var(--primary-color);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    #auth-links a:hover, #logout-link:hover {
+        text-decoration: underline;
+    }
+
+    h2 {
+        margin-top: 0;
+        color: #333;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    input[type="url"],
+    input[type="text"],
+    input[type="password"] {
+        padding: 12px;
+        font-size: 1em;
+        border: 1px solid #ccc;
+        border-radius: var(--border-radius);
+        transition: border-color 0.2s;
+    }
+
+    input[type="url"]:focus,
+    input[type="text"]:focus,
+    input[type="password"]:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    }
+
+    button {
+        padding: 12px 20px;
+        font-size: 1em;
+        font-weight: bold;
+        color: #fff;
+        background-color: var(--primary-color);
+        border: none;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: background-color 0.2s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    #login-section, #custom-url-section {
+        margin-top: 30px;
+        padding-top: 20px;
+        border-top: 1px solid #eee;
+    }
+
+    #result-section {
+        margin-top: 30px;
+        padding: 20px;
+        background-color: #e9f5ff;
+        border: 1px solid #b8dfff;
+        border-radius: var(--border-radius);
+    }
+
+    .result-box {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    #short-url-link {
+        font-size: 1.1em;
+        font-weight: bold;
+        color: #0056b3;
+        text-decoration: none;
+        word-break: break-all;
+    }
+
+    #short-url-link:hover {
+        text-decoration: underline;
+    }
+
+    #copy-button {
+        background-color: var(--secondary-color);
+        flex-shrink: 0;
+    }
+
+    #copy-button:hover {
+        background-color: #5a6268;
+    }
+
+    #message-area {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: var(--border-radius);
+        font-weight: 500;
+    }
+
+    .message-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .message-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+
+        const shortenForm = document.getElementById('shorten-form');
+        const longUrlInput = document.getElementById('long-url-input');
+
+        const loginLink = document.getElementById('login-link');
+        const loginSection = document.getElementById('login-section');
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username-input');
+        const passwordInput = document.getElementById('password-input');
+
+        const authLinks = document.getElementById('auth-links');
+        const userInfo = document.getElementById('user-info');
+        const usernameDisplay = document.getElementById('username-display');
+        const logoutLink = document.getElementById('logout-link');
+
+        const customUrlSection = document.getElementById('custom-url-section');
+        const customUrlForm = document.getElementById('custom-url-form');
+        const customLongUrlInput = document.getElementById('custom-long-url-input');
+        const customCodeInput = document.getElementById('custom-code-input');
+
+        const resultSection = document.getElementById('result-section');
+        const shortUrlLink = document.getElementById('short-url-link');
+        const copyButton = document.getElementById('copy-button');
+
+        const messageArea = document.getElementById('message-area');
+
+
+        let loggedInUser = null;
+
+
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loginSection.classList.toggle('hidden');
+        });
+
+
+        shortenForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const longUrl = longUrlInput.value;
+
+            try {
+                const response = await fetch('/api/shorten', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: longUrl })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayResult(data.shortUrl);
+                    showMessage('URL shortened successfully!', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to shorten URL.');
+                }
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        });
+
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const username = usernameInput.value;
+            const password = passwordInput.value;
+
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    loggedInUser = username;
+                    updateUIAfterLogin();
+                    showMessage(data.message, 'success');
+                } else {
+                    throw new Error(data.error || 'Login failed.');
+                }
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        });
+
+
+        customUrlForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const longUrl = customLongUrlInput.value;
+            const customCode = customCodeInput.value;
+
+            if (!loggedInUser) {
+                showMessage('You must be logged in to create a custom URL.', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/custom', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ url: longUrl, customCode: customCode, username: loggedInUser })
+                });
+                const data = await response.json();
+
+                if (response.ok) {
+                    displayResult(data.shortUrl);
+                    showMessage('Custom URL created successfully!', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to create custom URL.');
+                }
+            } catch (error) {
+                showMessage(error.message, 'error');
+            }
+        });
+
+
+        logoutLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            loggedInUser = null;
+            updateUIAfterLogout();
+            showMessage('You have been logged out.', 'success');
+        });
+
+
+        copyButton.addEventListener('click', () => {
+            navigator.clipboard.writeText(shortUrlLink.href)
+                .then(() => {
+                    copyButton.textContent = 'Copied!';
+                    setTimeout(() => { copyButton.textContent = 'Copy'; }, 2000);
+                })
+                .catch(err => {
+                    showMessage('Failed to copy URL.', 'error');
+                    console.error('Clipboard error:', err);
+                });
+        });
+
+
+
+
+        function updateUIAfterLogin() {
+            loginLink.classList.add('hidden');
+            loginSection.classList.add('hidden');
+            userInfo.classList.remove('hidden');
+            usernameDisplay.textContent = loggedInUser;
+            customUrlSection.classList.remove('hidden');
+        }
+
+        function updateUIAfterLogout() {
+            loginLink.classList.remove('hidden');
+            userInfo.classList.add('hidden');
+            usernameDisplay.textContent = '';
+            customUrlSection.classList.add('hidden');
+        }
+
+        function displayResult(url) {
+            resultSection.classList.remove('hidden');
+            shortUrlLink.href = url;
+            shortUrlLink.textContent = url;
+        }
+
+        function showMessage(message, type) {
+            messageArea.textContent = message;
+            messageArea.className = `message-${type}`;
+            messageArea.classList.remove('hidden');
+
+            setTimeout(() => {
+                messageArea.classList.add('hidden');
+            }, 5000); // Hide message after 5 seconds
+        }
+    });
+</script>
